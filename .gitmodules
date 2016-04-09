@@ -19,9 +19,18 @@
 [submodule "bundle/rust.vim"]
 	path = bundle/rust.vim
 	url = https://github.com/rust-lang/rust.vim.git
-[submodule "bundle/ctrlp.vim"]
-	path = bundle/ctrlp.vim
-	url = https://github.com/kien/ctrlp.vim.git
 [submodule "bundle/vdebug"]
 	path = bundle/vdebug
 	url = https://github.com/joonty/vdebug.git
+[submodule "bundle/nerdtree.git"]
+	path = bundle/nerdtree.git
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "bundle/taglist.vim.git"]
+	path = bundle/taglist.vim.git
+	url = https://github.com/vim-scripts/taglist.vim.git
+[submodule "bundle/fzf"]
+	path = bundle/fzf
+	url = https://github.com/junegunn/fzf
+[submodule "bundle/vim-gitgutter.git"]
+	path = bundle/vim-gitgutter.git
+	url = git://github.com/airblade/vim-gitgutter.git

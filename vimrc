@@ -94,7 +94,7 @@ set nohlsearch
 colorscheme lucius
 
 " drupal stupidness
-au BufRead,BufNewFile *.module,*.theme,*.install,*.test set filetype=php
+au BufRead,BufNewFile *.inc,*.info,*.module,*.theme,*.install,*.test set filetype=php
 
 " ruby complete
 au BufRead,BufNewFile *.rb,Gemfile,Guardfile, set filetype=ruby
@@ -142,3 +142,62 @@ let g:Powerline_symbols = 'fancy'
 set hid
 
 let g:LustyJugglerSuppressRubyWarning = 1
+
+map <C-n> :NERDTreeToggle<CR>
+
+let g:syntastic_php_checkers = ['php']
+" let g:syntastic_php_phpcs_args = "--standard=Drupal"
+
+autocmd CompleteDone * pclose
+
+set clipboard=unnamed
+
+if !exists("g:vdebug_options")
+  let g:vdebug_options = {}
+endif
+
+let g:vdebug_options['server'] = '0.0.0.0'
+let g:vdebug_options['path_maps'] = {'/var/www/vhosts/drupal7.dev/docroot':'/Users/jameswilson/Sites/drupal7.dev/docroot','/var/www/vhosts/aoc.dev/docroot':'/Users/jameswilson/Sites/aoc.dev/docroot','/var/www/vhosts/euromoney.dev/docroot':'/Users/jameswilson/Sites/euromoney.dev/docroot','/var/www/vhosts/ii-conferences.dev/docroot':'/Users/jameswilson/Sites/ii-conferences.dev/docroot'}
+
+set rtp+=~/.fzf
+
+nnoremap <C-P> :FZF -x -m<CR>
+
+" List of buffers
+function! s:buflist()
+  redir => ls
+  silent ls
+  redir END
+  return split(ls, '\n')
+endfunction
+
+function! s:bufopen(e)
+  execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+endfunction
+
+nnoremap <silent> <Leader><Enter> :call fzf#run({
+\   'source':  reverse(<sid>buflist()),
+\   'sink':    function('<sid>bufopen'),
+\   'options': '+m -x',
+\   'down':    len(<sid>buflist()) + 2
+\ })<CR>
+
+function! s:tagvisit(e)
+  execute 'tag' matchstr(a:e, '[^ ]*')
+endfunction
+
+command! -bar FZFTag call fzf#run({
+\ 'source': "awk '{print $1 \" \\033[38;5;131m⇰\\033[38;5;59m \" $2 \"\\033[0;0m\"}' " . join(tagfiles()) . ' | grep -v "^!" | uniq',
+\ 'sink': function('<sid>tagvisit'), 'options': '-m -x --ansi', 'down': '40%' })
+
+nnoremap <C-M> :FZFTag<CR>
+
+command! -bar FZFTagFile call fzf#run({
+\   'source': "cat " . tagfiles()[0] . " | grep '" . expand('%:@') .
+\     "' | grep '[fc]$' | awk 'BEGIN {FS=\"\t\"}; {print $1 \" \\033[38;5;131m⇰\\033[38;5;59m \" $3 \"\\033[0;0m\"}'" .
+\     " | sed 's/[\/\^]//g' | sed 's/\$;\"//g' ",
+\   'sink': function('<sid>tagvisit'), 'options':  '+m -x --ansi', 'down': '40%' })
+
+nnoremap <BS> :FZFTagFile<CR>
+
+let g:syntastic_javascript_checkers = ['eslint']
